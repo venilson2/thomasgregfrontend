@@ -23,7 +23,7 @@ public class ClientController : Controller
         return View();
     }
     
-    public IActionResult Profile()
+    public IActionResult Create()
     {
         return View();
     }
