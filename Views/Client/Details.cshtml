@@ -1,0 +1,145 @@
+@{
+    ViewBag.Title = "Detalhes";
+}
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header bg-dark text-white">
+            <h6 class="mb-0">Informações do Cliente</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5 class="text-muted">Nome:</h5>
+                    <p class="font-weight-bold" id="clientName"></p>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="text-muted">E-mail:</h5>
+                    <p class="font-weight-bold" id="clientEmail"></p>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="text-muted">Logotipo:</h5>
+                    <p class="font-weight-bold" id="clientLogo"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <h4>Endereços</h4>
+
+            <div class="row justify-content-end text-end">
+                <div class="col mb-3">
+                    <button id="addAddressButton" class="btn btn-success btn-block" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                        <i class="fas fa-plus"></i> Adicionar Endereço
+                    </button>
+                </div>
+            </div>
+
+            <table class="table table-striped table-bordered mt-3">
+                <thead>
+                    <tr>
+                        <th class="text-center">Logradouro</th>
+                        <th class="text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="addressTableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para adicionar endereço -->
+<div class="modal fade" id="addAddressModal" tabindex="-1" role="dialog" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="addAddressModalLabel">Adicionar Endereço</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addAddressForm">
+                    <div class="form-group">
+                        <label for="zipCode">Logradouro:</label>
+                        <input type="text" class="form-control" id="street" name="street" required>
+                    </div>
+
+                    <input type="hidden" class="form-control" id="clientId" name="clientId">
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Salvar</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var clientData = {
+        Client: {
+            Name: "Nome do Cliente",
+            Email: "cliente@example.com",
+            Logo: "Logo.png"
+        },
+        Addresses: [
+            { Street: "Rua 1" },
+            { Street: "Rua 2" }
+        ]
+    };
+
+    // Preencher os dados do cliente
+    document.getElementById("clientName").textContent = clientData.Client.Name;
+    document.getElementById("clientEmail").textContent = clientData.Client.Email;
+    document.getElementById("clientLogo").textContent = clientData.Client.Logo;
+
+    // Preencher os endereços
+    var addressTableBody = document.getElementById("addressTableBody");
+    clientData.Addresses.forEach(function (address) {
+        var row = document.createElement("tr");
+        row.innerHTML = `
+            <td class="text-center">${address.Street}</td>
+            <td class="text-center">
+                <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este endereço?')"><i class="fas fa-trash"></i></button>
+            </td>
+        `;
+
+        addressTableBody.appendChild(row);
+    });
+
+    // Definir o ID do cliente no formulário de adicionar endereço
+    document.getElementById("clientId").value = clientData.Client.Id;
+
+    // Evento de envio do formulário de adicionar endereço (simulação)
+    document.getElementById("addAddressForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        // Simule a adição de um novo endereço à lista de endereços do cliente
+        var newAddress = {
+            Street: document.getElementById("zipCode").value,
+        };
+        clientData.Addresses.push(newAddress);
+
+        // Atualizar a tabela de endereços
+        var row = document.createElement("tr");
+        row.innerHTML = `
+            <td class="text-center">${newAddress.Street}</td>
+            <td class="text-center">
+                <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este endereço?')"><i class="fas fa-trash"></i></button>
+            </td>
+        `;
+
+        addressTableBody.appendChild(row);
+        document.getElementById("addAddressModal").modal("hide");
+    });
+
+    // Evento de clique no botão "Adicionar Endereço"
+    document.getElementById("addAddressButton").addEventListener("click", function () {
+        document.getElementById("zipCode").value = "";
+        // Defina aqui qualquer outra inicialização necessária para o modal de adição de endereço
+    });
+</script>

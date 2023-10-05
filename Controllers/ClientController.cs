@@ -17,6 +17,11 @@ public class ClientController : Controller
     {
         return View();
     }
+
+    public IActionResult Details()
+    {
+        return View();
+    }
     
     public IActionResult Profile()
     {
